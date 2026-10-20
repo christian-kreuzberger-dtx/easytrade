@@ -83,22 +83,14 @@ func (op *OfferServiceConnector) getOffers(platformName string, productFilter st
 }
 
 func parseResponse(body []byte, mimeType string) (*Offer, error) {
-	var (
-		offer *Offer
-		err   error
-	)
 	switch mimeType {
 	case jsonMimeType:
-		offer, err = offerFromJson(body)
+		return offerFromJson(body)
 	case xmlMimeType:
-		offer, err = offerFromXml(body)
+		return offerFromXml(body)
 	default:
-		return nil, err
+		return nil, nil
 	}
-	if err != nil {
-		return nil, err
-	}
-	return offer, nil
 }
 
 func offerFromJson(jsonData []byte) (*Offer, error) {
