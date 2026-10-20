@@ -103,9 +103,10 @@ export class UserBackend {
         username: string,
         password: string
     ) {
-        const response = await this.loginAgent.post(
+        const response = await this.loginAgent.post<string>(
             "/Login",
-            xmlBuilder.build({ LoginRequest: { username, password } })
+            xmlBuilder.build({ LoginRequest: { username, password } }),
+            { responseType: "text" }
         )
         return xmlParser.parse(response.data) as IdResponse<LoginResponse>
     }
@@ -115,9 +116,10 @@ export class UserBackend {
         xmlParser: XMLParser,
         accountId: number
     ) {
-        const response = await this.loginAgent.post(
+        const response = await this.loginAgent.post<string>(
             "/Logout",
-            xmlBuilder.build({ LogoutRequest: { accountId } })
+            xmlBuilder.build({ LogoutRequest: { accountId } }),
+            { responseType: "text" }
         )
         return xmlParser.parse(response.data) as MessageResponse<LogoutResponse>
     }
@@ -127,9 +129,10 @@ export class UserBackend {
         xmlParser: XMLParser,
         request: SignupRequest
     ) {
-        const response = await this.loginAgent.post(
+        const response = await this.loginAgent.post<string>(
             "/Signup",
-            xmlBuilder.build({ SignupRequest: request })
+            xmlBuilder.build({ SignupRequest: request }),
+            { responseType: "text" }
         )
         return xmlParser.parse(response.data) as IdResponse<SignupResponse>
     }

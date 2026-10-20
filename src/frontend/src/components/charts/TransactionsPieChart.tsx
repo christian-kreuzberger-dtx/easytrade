@@ -1,21 +1,18 @@
 import React from "react"
-import { Cell, Legend, Pie, PieChart, ResponsiveContainer } from "recharts"
+import {
+    Cell,
+    Legend,
+    Pie,
+    PieChart,
+    PieLabelRenderProps,
+    ResponsiveContainer,
+} from "recharts"
 import { Typography } from "@mui/material"
 import { TransactionData } from "./TransactionsCharts"
 import { useTheme } from "../../contexts/ThemeContext/ThemeContext"
 
 type TransactionsPieChartProps = {
     transactionData: TransactionData[]
-}
-
-type CustomLabelProps = {
-    cx: number
-    cy: number
-    midAngle: number
-    innerRadius: number
-    outerRadius: number
-    percent: number
-    value: number
 }
 
 const RADIAN = Math.PI / 180
@@ -26,7 +23,15 @@ function CustomLabel({
     innerRadius,
     outerRadius,
     percent,
-}: CustomLabelProps) {
+}: PieLabelRenderProps) {
+    if (
+        midAngle === undefined ||
+        innerRadius === undefined ||
+        outerRadius === undefined ||
+        percent === undefined
+    ) {
+        return null
+    }
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5
     const x = cx + radius * Math.cos(-midAngle * RADIAN)
     const y = cy + radius * Math.sin(-midAngle * RADIAN)

@@ -16,13 +16,13 @@ import { AutofillButton } from "./AutofillButton"
 
 const formSchema = z.object({
     amount: z.coerce
-        .number({ error: "Amount is required" })
+        .number<number>({ error: "Amount is required" })
         .positive("Amount must be greater than 0"),
     price: z.coerce
-        .number({ error: "Price is required" })
+        .number<number>({ error: "Price is required" })
         .positive("Price must be grater than 0"),
     time: z.coerce
-        .number({ error: "Time range is required" })
+        .number<number>({ error: "Time range is required" })
         .min(1, "Time range must be at least 1h")
         .max(24, "Time range must be at most 24h"),
     total: z.number({ error: "Total price is required" }),

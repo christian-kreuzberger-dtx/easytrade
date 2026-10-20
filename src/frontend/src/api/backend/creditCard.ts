@@ -118,9 +118,10 @@ export class CreditCardBackend {
     }
 
     async getOrderStatusXml(xmlParser: XMLParser, accountId: number) {
-        const response = await this.creditCardAgent.get(
+        const response = await this.creditCardAgent.get<string>(
             `/orders/${accountId}/status/latest`,
             {
+                responseType: "text",
                 validateStatus: (status) => status < 400 || status === 404,
                 headers: {
                     "Content-Type": "application/xml",

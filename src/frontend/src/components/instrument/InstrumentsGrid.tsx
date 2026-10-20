@@ -1,5 +1,5 @@
 import React from "react"
-import Grid2 from "@mui/material/Grid2"
+import Grid2 from "@mui/material/Grid"
 import { Instrument } from "../../api/instrument/types"
 import InstrumentCard from "./InstrumentCard"
 

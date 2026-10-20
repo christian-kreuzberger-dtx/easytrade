@@ -73,11 +73,11 @@ const elementRoutes = createRoutesFromElements(
                     loadWithUser(
                         sessionUserProvider,
                         userLoader(queryClient, getUser)
-                    ),
+                    )(),
                     loadWithUser(
                         sessionUserProvider,
                         balanceLoader(queryClient, getBalance)
-                    ),
+                    )(),
                 ])
             }}
             id={LoaderIds.user}
