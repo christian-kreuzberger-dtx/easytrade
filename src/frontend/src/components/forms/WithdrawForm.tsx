@@ -37,7 +37,10 @@ const formSchema = z.object({
         .positive("Amount must be greater than 0"),
     cardholderName: z.string().min(1, "Cardholder name is required"),
     address: z.string().min(1, "Address is required"),
-    email: z.email("Invalid email"),
+    email: z
+        .string()
+        .min(1, "Email is required")
+        .pipe(z.email("Invalid email")),
     cardNumber: z
         .string()
         .min(1, "Card number is required")

@@ -36,13 +36,16 @@ export class PriceBackend {
     }
 
     async getLatestXml(xmlParser: XMLParser) {
-        const response = await this.agent.get("/prices/latest")
+        const response = await this.agent.get<string>("/prices/latest", {
+            responseType: "text",
+        })
         return xmlParser.parse(response.data) as PriceResponseXml
     }
 
     async getForInstrumentXml(xmlParser: XMLParser, instrumentId: string) {
-        const response = await this.agent.get(
-            `/prices/instrument/${instrumentId}?records=1440`
+        const response = await this.agent.get<string>(
+            `/prices/instrument/${instrumentId}?records=1440`,
+            { responseType: "text" }
         )
         return xmlParser.parse(response.data) as PriceResponseXml
     }

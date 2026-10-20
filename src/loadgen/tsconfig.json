@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ESNext" /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */,
-    "module": "CommonJS" /* Specify what module code is generated. */,
-    "moduleResolution": "Node",
+    "module": "Node16" /* Specify what module code is generated. */,
+    "moduleResolution": "Node16",
     "resolveJsonModule": true /* Enable importing .json files. */,
     "sourceMap": true /* Create source map files for emitted JavaScript files. */,
     "outDir": "./build" /* Specify an output folder for all emitted files. */,

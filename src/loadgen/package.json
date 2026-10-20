@@ -4,7 +4,7 @@
   "description": "Load generator for easyTrade based on loadgen-core",
   "main": "./build/src/main.js",
   "scripts": {
-    "build": "rm -rf ./build & tsc",
+    "build": "rm -rf ./build && tsc",
     "start": "node .",
     "dev": "node -r ts-node/register --env-file=.env ./src/main.ts",
     "format": "prettier -w .",
