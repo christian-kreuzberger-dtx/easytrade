@@ -1,9 +1,9 @@
 import React from "react"
-import "@testing-library/jest-dom"
+import "@testing-library/jest-dom/vitest"
 import { screen, render, waitFor } from "@testing-library/react"
 import SignupForm from "../../components/forms/SignupForm"
 import userEvent from "@testing-library/user-event"
-import { UserEvent } from "@testing-library/user-event/dist/types/setup/setup"
+import type { UserEvent } from "@testing-library/user-event"
 import { Mock } from "vitest"
 import { QueryClientWrapper } from "../providers"
 
