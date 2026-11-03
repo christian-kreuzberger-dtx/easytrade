@@ -45,7 +45,7 @@ paths:
         name: instrumentId
         required: true
         type: integer
-      - description: Number of records
+      - description: Number of records (default 100, max 1000, larger values are capped)
         in: query
         name: records
         type: integer
@@ -56,6 +56,12 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/price.pricesResult'
+        "400":
+          description: records is not a positive integer
+          schema:
+            additionalProperties:
+              type: string
+            type: object
       summary: Get prices of a particular instrument
       tags:
       - Pricing-service

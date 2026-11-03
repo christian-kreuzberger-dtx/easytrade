@@ -44,7 +44,7 @@ const docTemplate = `{
                     },
                     {
                         "type": "integer",
-                        "description": "Number of records",
+                        "description": "Number of records (default 100, max 1000, larger values are capped)",
                         "name": "records",
                         "in": "query"
                     }
@@ -54,6 +54,15 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/price.pricesResult"
+                        }
+                    },
+                    "400": {
+                        "description": "records is not a positive integer",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
                         }
                     }
                 }

@@ -59,7 +59,7 @@ curl -X GET "http://{IP_ADDRESS}:8083/v1/prices/latest" -H  "accept: text/plain"
 | name           | type         | data type | description                                 |
 | -------------- | ------------ | --------- | ------------------------------------------- |
 | `instrumentId` | required     | int       | Instrument id                               |
-| `records`      | not required | int       | How many records to return. Defaults to 100 |
+| `records`      | not required | int       | How many records to return. Defaults to 100. Values above 1000 are capped to 1000. Non-numeric or non-positive values return HTTP 400 |
 
 ##### Example cURL
 

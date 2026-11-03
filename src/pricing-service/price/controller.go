@@ -1,6 +1,7 @@
 package price
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -10,6 +11,11 @@ import (
 	"github.com/gin-gonic/gin"
 
 	log "github.com/sirupsen/logrus"
+)
+
+const (
+	defaultRecords = 100
+	maxRecords     = 1000
 )
 
 // @Summary		Get instrument prices
@@ -61,10 +67,15 @@ func GetLastPrice(ctx *gin.Context) {
 // @Success		200	{object}	price.pricesResult
 // @Router			/v1/prices/instrument/{instrumentId} [get]
 // @Param			instrumentId	path	int	true	"Instrument id"
-// @Param			records			query	int	false	"Number of records"
+// @Param			records			query	int	false	"Number of records (default 100, max 1000, larger values are capped)"
+// @Failure		400	{object}	map[string]string	"records is not a positive integer"
 func GetPricingDataForInstrument(ctx *gin.Context) {
 	instrumentId := ctx.Param("instrumentId")
-	records, _ := strconv.Atoi(ctx.DefaultQuery("records", "100"))
+	records, err := parseRecords(ctx.Query("records"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 
 	log.WithFields(log.Fields{
 		"instrumentId": instrumentId,
@@ -79,6 +90,18 @@ func GetPricingDataForInstrument(ctx *gin.Context) {
 		Results: priceList,
 	})
 	services.SendDataToRabbitQueue(prepareCSV(priceList, utils.RandomIntProvider{}))
+}
+
+// parseRecords protects the database from unbounded or invalid row limits.
+func parseRecords(raw string) (int, error) {
+	if raw == "" {
+		return defaultRecords, nil
+	}
+	records, err := strconv.Atoi(raw)
+	if err != nil || records <= 0 {
+		return 0, fmt.Errorf("query parameter 'records' must be a positive integer")
+	}
+	return min(records, maxRecords), nil
 }
 
 func prepareCSV(priceList []price, provider utils.IntProvider) string {
