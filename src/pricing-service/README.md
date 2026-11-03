@@ -59,7 +59,14 @@ curl -X GET "http://{IP_ADDRESS}:8083/v1/prices/latest" -H  "accept: text/plain"
 | name           | type         | data type | description                                 |
 | -------------- | ------------ | --------- | ------------------------------------------- |
 | `instrumentId` | required     | int       | Instrument id                               |
-| `records`      | not required | int       | How many records to return. Defaults to 100 |
+| `records`      | not required | int       | How many records to return. Defaults to 100. Maximum is 1000; larger values are capped to 1000 |
+
+##### Responses
+
+| code | description                                                                  |
+| ---- | ---------------------------------------------------------------------------- |
+| 200  | Pricing data                                                                 |
+| 400  | `records` is not an integer greater than 0, e.g. `{"error": "invalid 'records' parameter \"abc\": must be an integer between 1 and 1000"}` |
 
 ##### Example cURL
 

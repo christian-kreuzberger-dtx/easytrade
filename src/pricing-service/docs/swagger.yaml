@@ -1,4 +1,9 @@
 definitions:
+  price.errorResult:
+    properties:
+      error:
+        type: string
+    type: object
   price.price:
     properties:
       close:
@@ -45,17 +50,23 @@ paths:
         name: instrumentId
         required: true
         type: integer
-      - description: Number of records
+      - description: Number of records (1-1000, default 100; values above 1000 are
+          capped)
         in: query
         name: records
         type: integer
       produces:
       - application/json
+      - application/xml
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/price.pricesResult'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/price.errorResult'
       summary: Get prices of a particular instrument
       tags:
       - Pricing-service
@@ -66,6 +77,7 @@ paths:
       description: Get last price of instrument
       produces:
       - application/json
+      - application/xml
       responses:
         "200":
           description: OK
@@ -81,12 +93,28 @@ paths:
       description: Get current price of each instrument
       produces:
       - application/json
+      - application/xml
       responses:
         "200":
           description: OK
           schema:
             $ref: '#/definitions/price.pricesResult'
       summary: Get instrument prices
+      tags:
+      - Pricing-service
+  /version:
+    get:
+      consumes:
+      - '*/*'
+      produces:
+      - text/plain
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Get service version
       tags:
       - Pricing-service
 schemes:

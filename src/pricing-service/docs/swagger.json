@@ -22,7 +22,8 @@
                     "*/*"
                 ],
                 "produces": [
-                    "application/json"
+                    "application/json",
+                    "application/xml"
                 ],
                 "tags": [
                     "Pricing-service"
@@ -38,7 +39,7 @@
                     },
                     {
                         "type": "integer",
-                        "description": "Number of records",
+                        "description": "Number of records (1-1000, default 100; values above 1000 are capped)",
                         "name": "records",
                         "in": "query"
                     }
@@ -48,6 +49,12 @@
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/price.pricesResult"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/price.errorResult"
                         }
                     }
                 }
@@ -60,7 +67,8 @@
                     "*/*"
                 ],
                 "produces": [
-                    "application/json"
+                    "application/json",
+                    "application/xml"
                 ],
                 "tags": [
                     "Pricing-service"
@@ -83,7 +91,8 @@
                     "*/*"
                 ],
                 "produces": [
-                    "application/json"
+                    "application/json",
+                    "application/xml"
                 ],
                 "tags": [
                     "Pricing-service"
@@ -98,9 +107,40 @@
                     }
                 }
             }
+        },
+        "/version": {
+            "get": {
+                "consumes": [
+                    "*/*"
+                ],
+                "produces": [
+                    "text/plain",
+                    "application/json"
+                ],
+                "tags": [
+                    "Pricing-service"
+                ],
+                "summary": "Get service version",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "price.errorResult": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
         "price.price": {
             "type": "object",
             "properties": {

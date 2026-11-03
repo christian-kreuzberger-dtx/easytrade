@@ -1,6 +1,7 @@
 package price
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -11,6 +12,15 @@ import (
 
 	log "github.com/sirupsen/logrus"
 )
+
+const (
+	defaultRecords = 100
+	maxRecords     = 1000
+)
+
+type errorResult struct {
+	Error string `json:"error" xml:"error"`
+}
 
 // @Summary		Get instrument prices
 // @Description	Get current price of each instrument
@@ -59,12 +69,18 @@ func GetLastPrice(ctx *gin.Context) {
 // @Produce		json
 // @Produce		application/xml
 // @Success		200	{object}	price.pricesResult
+// @Failure		400	{object}	price.errorResult
 // @Router			/v1/prices/instrument/{instrumentId} [get]
 // @Param			instrumentId	path	int	true	"Instrument id"
-// @Param			records			query	int	false	"Number of records"
+// @Param			records			query	int	false	"Number of records (1-1000, default 100; values above 1000 are capped)"
 func GetPricingDataForInstrument(ctx *gin.Context) {
 	instrumentId := ctx.Param("instrumentId")
-	records, _ := strconv.Atoi(ctx.DefaultQuery("records", "100"))
+	rawRecords, present := ctx.GetQuery("records")
+	records, err := parseRecords(rawRecords, present)
+	if err != nil {
+		negotiateResponse(ctx, http.StatusBadRequest, &errorResult{Error: err.Error()})
+		return
+	}
 
 	log.WithFields(log.Fields{
 		"instrumentId": instrumentId,
@@ -79,6 +95,18 @@ func GetPricingDataForInstrument(ctx *gin.Context) {
 		Results: priceList,
 	})
 	services.SendDataToRabbitQueue(prepareCSV(priceList, utils.RandomIntProvider{}))
+}
+
+// parseRecords protects the DB from invalid limits and oversized queries.
+func parseRecords(raw string, present bool) (int, error) {
+	if !present {
+		return defaultRecords, nil
+	}
+	n, err := strconv.Atoi(raw)
+	if err != nil || n <= 0 {
+		return 0, fmt.Errorf("invalid 'records' parameter %q: must be an integer between 1 and %d", raw, maxRecords)
+	}
+	return min(n, maxRecords), nil
 }
 
 func prepareCSV(priceList []price, provider utils.IntProvider) string {
